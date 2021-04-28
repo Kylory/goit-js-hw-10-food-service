@@ -13,37 +13,33 @@ const Theme = {
   DARK: 'dark-theme',
 };
 
-setTheme();
+checkCurrentTheme();
 
 const menuCardsMarkup = createMenuCardsMarkup(menu);
 refs.menuList.insertAdjacentHTML('beforeend', menuCardsMarkup);
 
-refs.themeSwitcher.addEventListener('change', changeTheme);
+refs.themeSwitcher.addEventListener('change', switchTheme);
 
-function changeTheme() {
+function switchTheme() {
   let markupTheme = refs.body.classList.value;
 
-  if (markupTheme === Theme.LIGHT) {
-    refs.body.classList.replace(Theme.LIGHT, Theme.DARK);
-    localStorage.setItem('theme', Theme.DARK);
-    return
-  }
+  markupTheme === Theme.LIGHT
+    ? refs.body.classList.replace(Theme.LIGHT, Theme.DARK)
+    : refs.body.classList.replace(Theme.DARK, Theme.LIGHT);
 
-  if (markupTheme === Theme.DARK){
-    refs.body.classList.replace(Theme.DARK, Theme.LIGHT);
-    localStorage.setItem('theme', Theme.LIGHT);
-  }
+  let newMarkupTheme = refs.body.classList.value;
+  localStorage.setItem('theme', newMarkupTheme);
 }
 
-function setTheme() {
-  let markupTheme = refs.body.classList.value;
+function checkCurrentTheme() {
   let localStorageTheme = localStorage.getItem('theme');
 
-  if (localStorageTheme && markupTheme !== localStorageTheme) {
-    refs.body.classList.replace(markupTheme, localStorageTheme);
+  if (!localStorageTheme) {
+    localStorage.setItem('theme', Theme.LIGHT);
   }
 
   if (localStorageTheme === Theme.DARK) {
+    refs.body.classList.replace(Theme.LIGHT, Theme.DARK);
     refs.themeSwitcher.checked = true;
   }
 }
